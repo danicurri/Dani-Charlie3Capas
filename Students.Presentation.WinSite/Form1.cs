@@ -33,6 +33,7 @@ namespace Students.Presentation.WinSite
         private void btJSON_Click(object sender, EventArgs e)
         {
             CargaDatos();
+            studentBL.Add(student);
 
         }
 

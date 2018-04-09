@@ -10,5 +10,6 @@ namespace Students.DataAccess.Dao
      public interface IStudentDao
     {
         Student Insert(Student student);
+        Student AggregateJson(Student student);
     }
 }

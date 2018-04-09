@@ -13,13 +13,11 @@ namespace Students.Business.Logic
         IStudentDao studentDao = new StudentDao();
         
 
-        public Student Add(Student student)
-        
+        public Student Add(Student student)   
         {
             student.Register = DateTime.Now;
             student.Age = CalculateAge(student.DateOfBirth, student.Register);
             return studentDao.Insert(student);
-
         }
         
         public int CalculateAge(DateTime DateOfBirth, DateTime CurrentDate)
