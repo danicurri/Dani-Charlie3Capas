@@ -14,9 +14,9 @@ namespace Students.DataAccess.Dao
     {
          string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-        public Student Insert(Student student)
+        public Student InsertTxt(Student student)
         {  
-            string line = (Convert.ToString(student.ID) + "," + student.Name + "," +  student.Surname + "," + student.DNI + "," + Convert.ToString(student.Guid) + "," + Convert.ToString(student.Register) + "," + Convert.ToString(student.Age));
+            string line = (Convert.ToString(student.ID) + "," + student.Name + "," +  student.Surname + "," + student.DNI + ","  + Convert.ToString(student.DateOfBirth) + "," + Convert.ToString(student.Guid) + "," + Convert.ToString(student.Register) + "," + Convert.ToString(student.Age));
             using (StreamWriter outputFile = new StreamWriter(mydocpath + @"\Students.txt"))
             {              
                     outputFile.WriteLine(line);
@@ -35,17 +35,15 @@ namespace Students.DataAccess.Dao
                     var stringLine = inputFile.ReadLine();
                     arrayStrings = stringLine.Split(',');
                 }
-                Student student = new Student(Convert.ToInt32(arrayStrings[0]), arrayStrings[1], arrayStrings[2], arrayStrings[3], Convert.ToDateTime(arrayStrings[4]), Guid.Parse(arrayStrings[5]), Convert.ToInt32(arrayStrings[6]), Convert.ToDateTime(arrayStrings[7]));
+                Student student = new Student(Convert.ToInt32(arrayStrings[0]), arrayStrings[1], arrayStrings[2], arrayStrings[3], DateTime.Parse(arrayStrings[4]), new Guid(arrayStrings[5]), Convert.ToInt32(arrayStrings[7]), DateTime.Parse(arrayStrings[6]));
                 return student;
             }
-            
-
         }
 
-        public Student AggregateJson(Student student)
+        public Student InsertJson(Student student)
         {
             {
-                string json = JsonConvert.SerializeObject(student.ToString());
+                string json = JsonConvert.SerializeObject(student);
                 //write string to file
                 System.IO.File.WriteAllText((mydocpath + @"\Students.json"), json);
             }
@@ -57,10 +55,23 @@ namespace Students.DataAccess.Dao
             using (StreamReader r = new StreamReader(mydocpath + @"\Students.json"))
             {
                 string json = r.ReadToEnd();
-                var student = JsonConvert.DeserializeObject<Student>(json);
+                Student student = JsonConvert.DeserializeObject<Student>(json);
                 return student;
             }
         }
+
+        public Student InsertXml(Student student)
+        {
+            {
+                System.Xml.Serialization.XmlSerializer writer =
+                new System.Xml.Serialization.XmlSerializer(typeof(Student));
+                System.IO.FileStream file = System.IO.File.Create(mydocpath + @"\Students.xml");
+                writer.Serialize(file, student);
+                file.Close();
+            }
+            return student;
+        }
+            
     }
 }
 
