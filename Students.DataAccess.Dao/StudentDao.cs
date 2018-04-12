@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Students.Common.Logic;
 
@@ -69,9 +70,18 @@ namespace Students.DataAccess.Dao
                 writer.Serialize(file, student);
                 file.Close();
             }
-            return student;
+            return GetLastXmlStudent();
         }
-            
+
+        public Student GetLastXmlStudent()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Student));
+            using (FileStream fileStream = new FileStream((mydocpath + @"\Students.xml"), FileMode.Open))
+            {
+                Student student = (Student)serializer.Deserialize(fileStream);
+                return student;
+            }
+        }
     }
 }
 
